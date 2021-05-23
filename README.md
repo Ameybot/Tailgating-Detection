@@ -15,3 +15,7 @@ It works in three steps:
 The problem we are trying to solve is a security flaw in the current paradigm of automatic entrance security systems. Tailgating is when an intruder gets access to the building by entering immediately after a verified employee without flagging the system. Our proposed idea involves no manual human intervention and can be easily implemented in almost all entrances with need for no additional equipment. The scalability of this idea is important as it should be able to integrate well with existing security systems with minimum installation.
 
 This problem is very important to the industry. Tailgating gives the individual unrestricted access to the premise. This could be a safety concern for the employees of the organisation. It could also give the individual access to crucial information of the company like the details of their new product leading to huge losses to the company. The current solution to the problem involves hiring a security to guard to monitor the entrances. This has two downsides. Firstly, large companies have multiple entrances requiring multiple personnel to survey them. This is expensive to the company. Secondly, even manual surveillance is error-prone and slow. With a large number of entrances there are more chances to miss. A human is also slower at reacting to this intrusion than an automated system and may not be able to identify the intruder. Our idea solves all these problems by introducing an automatic robust system.
+
+## License:
+
+This project is licensed under the [MIT License](LICENSE)

@@ -10,7 +10,7 @@ It works in three steps:
 2. The second step uses the bounding box output from the model to calculate the centroid of the object. The centroid is then tracked by an object tracking framework. During the installation of the camera the user is asked to draw the region of entrance via a GUI to help the model identify where the gate is. Whenever the card is swiped the model immediately starts tracking the centroids in the frame. It counts the number of points entering the gate region. If the number of people entering is more than the number of swipes then we report tailgating.
 3. When tailgating is detected the model captures the mask of the tailgating individual and sends a mail to the security personnel as well as the employee whose id was swiped with a photo of the tailgating individual. The photo of the individual is captured from the mask.
 
-# How will your idea help the industry and which problem will it solve?
+# Industry Application:
 
 The problem we are trying to solve is a security flaw in the current paradigm of automatic entrance security systems. Tailgating is when an intruder gets access to the building by entering immediately after a verified employee without flagging the system. Our proposed idea involves no manual human intervention and can be easily implemented in almost all entrances with need for no additional equipment. The scalability of this idea is important as it should be able to integrate well with existing security systems with minimum installation.
 

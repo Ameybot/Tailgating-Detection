@@ -48,129 +48,69 @@ def check_cross_difficult(centroids,pt_1,pt_2,pt_3,pt_4):
 
     return count
 
-def sort_detection_tracking(classes, model, CONFIG):
+def sort_detection_tracking(frame, r, classes, model, CONFIG, mot_tracker, prev_frame, glob_cross, intruder):
     colors=[(255,0,0),(0,255,0),(0,0,255),(255,0,255),(128,0,0),(0,128,0),(0,0,128),(128,0,128),(128,128,0),(0,128,128)]
-    mot_tracker = Sort() 
-
-    frames = 0
     starttime = time.time()
+    if (False): #Swipe Signal
+        glob_cross = 0
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-    cap=cv2.VideoCapture(CONFIG['video'])
+    r=np.array(r).astype(int)
+    model_frame = frame[int(r[1]):int(r[1]+r[3]), int(r[0]):int(r[0]+r[2])]
+    cv2.rectangle(frame, ( int(r[0]),int(r[1])), (int(r[0]+r[2]),int(r[1]+r[3])), (0,0,0), 4)
 
-    cv2.namedWindow(winname="frame")
+    x_offset=r[0]
+    y_offset=r[1]
 
-    fps=FPS().start()
-    prev_frame = 0
-    glob_cross = 0
-    intruder = 0
+    pilimg = Image.fromarray(model_frame)
+    detections = detect_image(pilimg, CONFIG['img_size'],CONFIG['conf_thres'], CONFIG['nms_thres'], model, CONFIG['device'])
 
-    while True:
-        ret, frame=cap.read()
-        if not ret:
-            print("failed")
-            break
-        
-        if (False): #Swipe Signal
-            glob_cross = 0
+    frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+       
+    img = np.array(pilimg)
+    pad_x = max(img.shape[0] - img.shape[1], 0) * (CONFIG['img_size'] / max(img.shape))
+    pad_y = max(img.shape[1] - img.shape[0], 0) * (CONFIG['img_size'] / max(img.shape))
+    unpad_h = CONFIG['img_size'] - pad_y
+    unpad_w = CONFIG['img_size'] - pad_x
 
-        ch = 0xFF & cv2.waitKey(1)
-        
+    cent = []
+    if detections is not None:
+        tracked_objects = mot_tracker.update(detections.cpu())
+        # print(tracked_objects)
+        unique_labels = detections[:, -1].cpu().unique()
+        n_cls_preds = len(unique_labels)
+        for x1, y1, x2, y2, obj_id, cls_pred in tracked_objects:
+            box_h = int(((y2 - y1) / unpad_h) * img.shape[0])
+            box_w = int(((x2 - x1) / unpad_w) * img.shape[1])
+            y1 = int(((y1 - pad_y // 2) / unpad_h) * img.shape[0])
+            x1 = int(((x1 - pad_x // 2) / unpad_w) * img.shape[1])
+            color = colors[int(obj_id) % len(colors)]
+            cls = classes[int(cls_pred)]
+            if(cls=='person'):
+                cv2.rectangle(frame, (x1+x_offset, y1+y_offset), (x1+x_offset+box_w, y1+y_offset+box_h), color, 4)
+                cv2.rectangle(frame, (x1+x_offset, y1+y_offset-35), (x1+x_offset+len(cls)*19+80, y1+y_offset), color, -1)
+                cv2.putText(frame, cls + "-" + str(int(obj_id)), (x1+x_offset, y1+y_offset - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 3)
+                cent.append(((2*x1+2*x_offset+box_w)/2,(2*y1+2*y_offset+box_h)/2))
+                cv2.circle(frame, np.array(cent[-1]).astype(int), radius=5, color=(255, 0, 0), thickness=-1)
+    
+    cv2.line(frame,(r[0], r[1]), (r[0], r[1]+r[3]),(0,0,255),3) #End points of line
+    cv2.line(frame,(r[0]+r[2],r[1]),(r[0]+r[2],r[1]+r[3]),(0,0,255),3)    #End points of line
 
-        frames += 1
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    cross = check_cross_difficult(cent,(r[0], r[1]), (r[0], r[1]+r[3]),(r[0]+r[2],r[1]),(r[0]+r[2],r[1]+r[3]))
+    if(prev_frame!=cross):
+        prev_frame = cross
+        glob_cross += prev_frame
+        print('CROSS: ',glob_cross)
+        if cross>0 and glob_cross>1:
+            intruder += 1
+            cv2.imwrite('Intruders/Intruder_{}.jpg'.format(intruder),frame)
+            mailer.mail("Aishik Rakshit", CONFIG['sender_email_address'],  CONFIG['receiver_email_address'],  CONFIG['intruder_image_folder'],  CONFIG['email_password'])
+    else:
+        print('CROSS: ',glob_cross)        
+    if  glob_cross>1:
+        frame = cv2.putText(frame, 'Tailgating Detected', (0,100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 256), 3, cv2.LINE_AA)
+    else:
+        frame = cv2.putText(frame, 'No Tailgating Detected', (0,100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 256, 0), 3, cv2.LINE_AA)
+    frame=cv2.resize(frame, (780, 540),interpolation = cv2.INTER_NEAREST)
+    return frame,prev_frame, glob_cross, intruder
 
-        if (frames==1):
-            r = cv2.selectROI(frame)
-            print(r)
-        r=np.array(r).astype(int)
-        model_frame = frame[int(r[1]):int(r[1]+r[3]), int(r[0]):int(r[0]+r[2])]
-        cv2.rectangle(frame, ( int(r[0]),int(r[1])), (int(r[0]+r[2]),int(r[1]+r[3])), (0,0,0), 4)
-
-        x_offset=r[0]
-        y_offset=r[1]
-
-        pilimg = Image.fromarray(model_frame)
-        detections = detect_image(pilimg, CONFIG['img_size'],CONFIG['conf_thres'], CONFIG['nms_thres'], model, CONFIG['device'])
-
-        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-        
-        
-        img = np.array(pilimg)
-        pad_x = max(img.shape[0] - img.shape[1], 0) * (CONFIG['img_size'] / max(img.shape))
-        pad_y = max(img.shape[1] - img.shape[0], 0) * (CONFIG['img_size'] / max(img.shape))
-        unpad_h = CONFIG['img_size'] - pad_y
-        unpad_w = CONFIG['img_size'] - pad_x
-
-        cent = []
-        if detections is not None:
-            tracked_objects = mot_tracker.update(detections.cpu())
-            # print(tracked_objects)
-            unique_labels = detections[:, -1].cpu().unique()
-            n_cls_preds = len(unique_labels)
-            for x1, y1, x2, y2, obj_id, cls_pred in tracked_objects:
-                box_h = int(((y2 - y1) / unpad_h) * img.shape[0])
-                box_w = int(((x2 - x1) / unpad_w) * img.shape[1])
-                y1 = int(((y1 - pad_y // 2) / unpad_h) * img.shape[0])
-                x1 = int(((x1 - pad_x // 2) / unpad_w) * img.shape[1])
-                color = colors[int(obj_id) % len(colors)]
-                cls = classes[int(cls_pred)]
-                if(cls=='person'):
-                    cv2.rectangle(frame, (x1+x_offset, y1+y_offset), (x1+x_offset+box_w, y1+y_offset+box_h), color, 4)
-                    cv2.rectangle(frame, (x1+x_offset, y1+y_offset-35), (x1+x_offset+len(cls)*19+80, y1+y_offset), color, -1)
-                    cv2.putText(frame, cls + "-" + str(int(obj_id)), (x1+x_offset, y1+y_offset - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 3)
-                    cent.append(((2*x1+2*x_offset+box_w)/2,(2*y1+2*y_offset+box_h)/2))
-                    cv2.circle(frame, np.array(cent[-1]).astype(int), radius=5, color=(255, 0, 0), thickness=-1)
-        
-        cv2.line(frame,(r[0], r[1]), (r[0], r[1]+r[3]),(0,0,255),3) #End points of line
-        cv2.line(frame,(r[0]+r[2],r[1]),(r[0]+r[2],r[1]+r[3]),(0,0,255),3)    #End points of line
-
-        cross = check_cross_difficult(cent,(r[0], r[1]), (r[0], r[1]+r[3]),(r[0]+r[2],r[1]),(r[0]+r[2],r[1]+r[3]))
-        if(prev_frame!=cross):
-            prev_frame = cross
-            glob_cross += prev_frame
-            print('CROSS: ',glob_cross)
-            if cross>0 and glob_cross>1:
-                intruder += 1
-                mailer.mail("Aishik Rakshit", CONFIG['sender_email_address'],  CONFIG['receiver_email_address'],  CONFIG['intruder_image_folder'],  CONFIG['email_password'])
-        else:
-            print('CROSS: ',glob_cross)
-            
-        if  glob_cross>1:
-            frame = cv2.putText(frame, 'Tailgating Detected', (0,100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 256), 3, cv2.LINE_AA)
-        else:
-            frame = cv2.putText(frame, 'No Tailgating Detected', (0,100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 256, 0), 3, cv2.LINE_AA)
-
-        fps.update()
-        fps.stop()
-        # print(fps.fps())
-        cv2.imshow("frame",frame)
-        if ch == 27:
-            break
-    cap.release()
-    cv2.destroyAllWindows()
-
-def execute():
-    CONFIG={}
-    with open('config\config.yaml') as f:
-        global_val=yaml.load(f)
-        CONFIG['config_path']=global_val['models'].get('yolov3_cfg')
-        CONFIG['weights_path']=global_val['models'].get('yolov3_weights')
-        CONFIG['class_path']=global_val['models'].get('yolov3_class')
-        CONFIG['img_size']=416
-        CONFIG['conf_thres']=0.8
-        CONFIG['nms_thres']=0.4
-        CONFIG['video'] = 'tailgate_3.mp4' #Replace with 0 or IP Address of CCTV for Real-Time Detection
-        CONFIG['sender_email_address'] = global_val['email'].get('sender_email_address')
-        CONFIG['email_password'] = global_val['email'].get('email_password')
-        CONFIG['receiver_email_address'] = global_val['email'].get('receiver_email_address')
-        CONFIG['intruder_image_folder'] = global_val['email'].get('intruder_image_folder')
-        CONFIG["device"]=torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-
-        print(f"Device: {CONFIG['device']}")
-
-        model = Darknet(CONFIG['config_path'], img_size=CONFIG['img_size'])
-        model.load_weights(CONFIG['weights_path'])
-        model.to(CONFIG['device'])
-        model.eval()
-        classes = utils.load_classes(CONFIG['class_path'])
-        sort_detection_tracking(classes, model, CONFIG)

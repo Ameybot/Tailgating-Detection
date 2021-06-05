@@ -3,6 +3,7 @@ from email.message import EmailMessage
 import imghdr
 import time
 import os
+from playsound import playsound
 
 def mail(name, from_, to, intruder_folder, password): #OR CSV Index OR Swipe Signal Input 
     print(from_)
@@ -32,3 +33,5 @@ Security Department'''.format(name,time.strftime("%H:%M:%S", time.localtime())) 
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
         smtp.login(from_, password)
         smtp.send_message(msg)
+    print('Alarm Started')
+    playsound('sound.mpeg')

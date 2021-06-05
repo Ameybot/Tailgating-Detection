@@ -84,6 +84,8 @@ def get_image(img, objects, intruders,points):
         img = cv2.addWeighted(img, 1.0, rgb_mask,0.2, 0)
         cv2.rectangle(img, (obj['box'][0], obj['box'][1]), (obj['box'][2], obj['box'][3]), color,3)
         cv2.putText(img, text, (obj['box'][0], obj['box'][1]-3), cv2.FONT_HERSHEY_SIMPLEX, 1,black,2,cv2.LINE_AA)
-        cv2.circle(img, (obj['centroid'][0], obj['centroid'][1]), 4, black, -1)
+        ptx = (obj['box'][0] + obj['box'][2])//2
+        pty = int(obj['box'][3])
+        cv2.circle(img, (ptx, pty), 4, black, -1)
         img = cv2.line(img,points[0],points[1],blue,3) #End points of line
     return img

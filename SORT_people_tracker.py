@@ -58,7 +58,6 @@ def sort_detection_tracking(classes, model, CONFIG):
     cap=cv2.VideoCapture(CONFIG['video'])
 
     cv2.namedWindow(winname="frame")
-    cv2.setMouseCallback("frame",draw_point)
 
     fps=FPS().start()
     prev_frame = 0
@@ -150,7 +149,7 @@ def sort_detection_tracking(classes, model, CONFIG):
     cap.release()
     cv2.destroyAllWindows()
 
-def main():
+def execute():
     CONFIG={}
     with open('config\config.yaml') as f:
         global_val=yaml.load(f)
@@ -175,5 +174,3 @@ def main():
         model.eval()
         classes = utils.load_classes(CONFIG['class_path'])
         sort_detection_tracking(classes, model, CONFIG)
-
-main()

@@ -5,7 +5,7 @@ models:
   yolov3_class : config\coco.names
 
 email:
-  sender_email_address: ameyrambatla@gmail.com
-  email_password : vgzpipdzigyslced
-  receiver_email_address : a.rakshit@iitg.ac.in
+  sender_email_address: # SENDER EMAIL HERE
+  email_password : # PUBLIC EMAIL PASSWORD HERE
+  receiver_email_address : # RECIEVER PASSWORD HERE
   intruder_image_folder : Intruders

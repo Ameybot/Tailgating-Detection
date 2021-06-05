@@ -1,0 +1,11 @@
+models:
+  mask_rcnn_weights : weights\MaskRCNN_2class
+  yolov3_weights : weights\yolov3.weights
+  yolov3_cfg : config\yolov3.cfg
+  yolov3_class : config\coco.names
+
+email:
+  sender_email_address: ameyrambatla@gmail.com
+  email_password : vgzpipdzigyslced
+  receiver_email_address : a.rakshit@iitg.ac.in
+  intruder_image_folder : Intruders

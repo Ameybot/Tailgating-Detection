@@ -1,17 +1,22 @@
 # Tailgating Detection using PyTorch & OpenCV
 ## Final Submission:
-* [Youtube](https://youtu.be/Pkks_BcHSSM) 
-    * Skip to [7:10](https://youtu.be/Pkks_BcHSSM?t=431) to watch the working implemenation.
-* [Drive](https://drive.google.com/file/d/1fO9o52LVYVOfiFsVyYPjLh3UVcjh0gGF/view)
+* [Youtube](https://youtu.be/vFcg7GRTv1w) 
+    * Skip to [7:10](https://youtu.be/vFcg7GRTv1w?t=429) to watch the working implemenation.
+* [Drive](https://drive.google.com/file/d/1_f2Fpowl-cglAdDzKsHBWpuQCqGUeQ99/view)
 * [PDF](Final%20Presentation.pdf)
 * [PPTX](Final%20Presentation.pptx)
 
-Tailgating Detection using Instance Segmentation and bounding box tracking via a fine-tuned Mask RCNN model.
+## Preview of Implementation:
+* **High Power System:** Mask R-CNN + Centroid Tracking
 
-## Instruction to Run
-* pip install the requirements.txt file
-* Download the weights from the drive link and place them in the weights folder
-* Run the User_interface.py file after choosing the required video or 0 for vebcam in **cv2.Videocapture**
+<img src="misc/Working%20Video%202.gif" width="800" height="400" />
+
+* **High Efficiency System:** YOLO-v3 + SORT
+
+<img src="misc/Working%20Video%201.gif" width="800" height="400" />
+
+
+Tailgating Detection using Instance Segmentation and bounding box tracking via a fine-tuned Mask RCNN model.
 
 ## Abstract:
 The issue of security is paramount to any organisation, especially organisations like large corporations. These corporations not only house employees whose safety is an issue but also intellectual property whose theft could bankrupt a company. Most companies nowadays have multiple entries which cannot all be manually monitored leading to automated entries and surveillance via CCTVs. To enter a building an employee must swipe his ID card at the entrance after which the door unlocks to let him in. This method has been successful in most instances, however it has one glaring flaw. A motivated intruder could lurk near the entrance and sneak inside behind an unsuspecting employee unnoticed. This security flaw has been exploited numerous times and the only available solution currently is to place a security guard at the entrance. This solution is both inefficient and expensive as it requires us to hire a guard and is still susceptible to human error. Our proposed solution is to use the installed CCTVs at the entrance to detect instances of tailgating by DeepLearning models. This information is passed on to security via an alert whenever tailgating is detected. We also propose to capture the information about the intruder by capturing his image from within the bounding box. This information would be critical in identifying the individual by security personnel so that he can be apprehended immediately. 

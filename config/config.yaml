@@ -6,6 +6,6 @@ models:
 
 email:
   sender_email_address: # SENDER EMAIL HERE
-  email_password : # PUBLIC EMAIL PASSWORD HERE
+  email_password : # GMAIL APP PASSWORD HERE - Learn more here: https://support.google.com/accounts/answer/185833?hl=en
   receiver_email_address : # RECIEVER PASSWORD HERE
   intruder_image_folder : Intruders

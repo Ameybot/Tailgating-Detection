@@ -1,5 +1,5 @@
 # Tailgating Detection using PyTorch & OpenCV
-### Final Submission:
+## Final Submission:
 * [Youtube](https://youtu.be/Pkks_BcHSSM) 
     * Skip to [7:10](https://youtu.be/Pkks_BcHSSM?t=431) to watch the working implemenation.
 * [Drive](https://drive.google.com/file/d/1fO9o52LVYVOfiFsVyYPjLh3UVcjh0gGF/view)
@@ -22,6 +22,14 @@ It works in three steps:
 The problem we are trying to solve is a security flaw in the current paradigm of automatic entrance security systems. Tailgating is when an intruder gets access to the building by entering immediately after a verified employee without flagging the system. Our proposed idea involves no manual human intervention and can be easily implemented in almost all entrances with need for no additional equipment. The scalability of this idea is important as it should be able to integrate well with existing security systems with minimum installation.
 
 This problem is very important to the industry. Tailgating gives the individual unrestricted access to the premise. This could be a safety concern for the employees of the organisation. It could also give the individual access to crucial information of the company like the details of their new product leading to huge losses to the company. The current solution to the problem involves hiring a security to guard to monitor the entrances. This has two downsides. Firstly, large companies have multiple entrances requiring multiple personnel to survey them. This is expensive to the company. Secondly, even manual surveillance is error-prone and slow. With a large number of entrances there are more chances to miss. A human is also slower at reacting to this intrusion than an automated system and may not be able to identify the intruder. Our idea solves all these problems by introducing an automatic robust system.
+
+## Further Improvements:
+Improvement for further projects
+* **Faster model**: Use a lighter backbone like ResNet 30 etc to improve the high power segmentation models computational performance
+* **Automatic line drawing**: Currently the model requires the user to select the ROI to draw the line. We can easily employ a seperate model to automatically detect the door and draw the line
+* **More options for line placement**: While we have made the model as adaptive as possible it still remains highly sensitive to position of line. Manual intervention is often required to correctly draw the line. 
+* **Better face capturing**: In the current model we send the security a mail with mask of intruder at the breaching point. It can be improved by selecting the image from a prior frame.
+* **Using DBMS**: We can improve performance and store information more systematically using Databases. This is important for large scale systems with multiple CCTVs
 
 ## License:
 

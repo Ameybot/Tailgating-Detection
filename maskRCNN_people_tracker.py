@@ -41,14 +41,10 @@ def find_crossed(objects,points):
     return crossed
 
 def obj_detection_vid_api(frame, model, r, device, CONFIG, allowed, ct,signal, intruders,done):
-    # pt1=int(r[0])
-    # pt2=int(2*r[1]+r[3])
-    # pt3=int(r[0]+r[2])
-    # pt4=int(2*r[1]+r[3])
-    pt1=680
-    pt2=580
-    pt3=900
-    pt4=650
+    pt1=int(r[0])
+    pt2=int(2*r[1]+r[3])
+    pt3=int(r[0]+r[2])
+    pt4=int(2*r[1]+r[3])
     boxes, labels, masks = maskrcnn_utils.get_predictions(frame, model, device)
     objects = ct.update(boxes, labels, masks)
     if(signal == 1):

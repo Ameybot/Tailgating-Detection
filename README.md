@@ -1,8 +1,10 @@
 # Tailgating Detection using PyTorch & OpenCV
-### Final Presentation Video:
+### Final Submission:
 * [Youtube](https://youtu.be/Pkks_BcHSSM) 
     * Skip to [7:10](https://youtu.be/Pkks_BcHSSM?t=431) to watch the working implemenation.
 * [Drive](https://drive.google.com/file/d/1fO9o52LVYVOfiFsVyYPjLh3UVcjh0gGF/view)
+* [PDF](Final%20Presentation.pdf)
+* [PPTX](Final%20Presentation.pptx)
 
 Tailgating Detection using Instance Segmentation and bounding box tracking via a fine-tuned Mask RCNN model.
 

@@ -1,8 +1,8 @@
 # Tailgating Detection using PyTorch & OpenCV
 ## Final Submission:
-* [Youtube](https://youtu.be/Pkks_BcHSSM) 
-    * Skip to [7:10](https://youtu.be/Pkks_BcHSSM?t=431) to watch the working implemenation.
-* [Drive](https://drive.google.com/file/d/1fO9o52LVYVOfiFsVyYPjLh3UVcjh0gGF/view)
+* [Youtube](https://youtu.be/vFcg7GRTv1w) 
+    * Skip to [7:10](https://youtu.be/vFcg7GRTv1w?t=429) to watch the working implemenation.
+* [Drive](https://drive.google.com/file/d/1_f2Fpowl-cglAdDzKsHBWpuQCqGUeQ99/view)
 * [PDF](Final%20Presentation.pdf)
 * [PPTX](Final%20Presentation.pptx)
 
